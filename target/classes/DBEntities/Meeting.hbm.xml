@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.Meeting" optimistic-lock="none" table="meeting">
+        <id name="idMeeting" type="int">
+            <column name="id_meeting"/>
+            <generator class="identity"/>
+        </id>
+        <property name="dayWeek" type="string">
+            <column length="9" name="day_week"/>
+        </property>
+        <property name="hour" type="string">
+            <column length="6" name="hour"/>
+        </property>
+        <property name="dayYear" type="date">
+            <column length="10" name="day_year"/>
+        </property>
+        <property name="classroom" type="java.lang.Integer">
+            <column name="classroom"/>
+        </property>
+        <property name="receiver" type="string">
+            <column length="45" name="receiver"/>
+        </property>
+        <property name="confirmed" type="java.lang.Boolean">
+            <column name="confirmed"/>
+        </property>
+        <property name="title" type="string">
+            <column length="45" name="title"/>
+        </property>
+        <property name="numGuests" type="java.lang.Integer">
+            <column name="num_guests"/>
+        </property>
+        <property name="remainingAcceptance" type="java.lang.Integer">
+            <column name="remaining_acceptance"/>
+        </property>
+        <property name="topic" type="string">
+            <column length="45" name="topic"/>
+        </property>
+        <set fetch="select" inverse="true" lazy="true" name="meetingRequests" table="meeting_request">
+            <key>
+                <column name="id_meeting"/>
+            </key>
+            <one-to-many class="DBEntities.MeetingRequest"/>
+        </set>
+    </class>
+</hibernate-mapping>

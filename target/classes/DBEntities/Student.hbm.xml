@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.Student" optimistic-lock="none" table="student">
+        <id name="idStudent" type="int">
+            <column name="id_student"/>
+            <generator class="identity"/>
+        </id>
+        <property name="registered" type="java.lang.Boolean">
+            <column name="registered"/>
+        </property>
+        <property name="email" type="string">
+            <column length="45" name="email" unique="true"/>
+        </property>
+        <property name="passwordHashed" type="string">
+            <column length="60" name="password_hashed"/>
+        </property>
+        <property name="passwordNotHashed" type="java.lang.Integer">
+            <column name="password_not_hashed"/>
+        </property>
+        <property name="dni" type="string">
+            <column length="12" name="dni" unique="true"/>
+        </property>
+        <property name="name" type="string">
+            <column length="45" name="name"/>
+        </property>
+        <property name="lastName" type="string">
+            <column length="45" name="last_name"/>
+        </property>
+        <property name="address" type="string">
+            <column length="45" name="address"/>
+        </property>
+        <property name="phone1" type="string">
+            <column length="12" name="phone1"/>
+        </property>
+        <property name="phone2" type="string">
+            <column length="12" name="phone2"/>
+        </property>
+        <property name="foto" type="binary">
+            <column name="foto"/>
+        </property>
+        <set fetch="select" inverse="true" lazy="true" name="registrations" table="registration">
+            <key>
+                <column name="id_student" not-null="true"/>
+            </key>
+            <one-to-many class="DBEntities.Registration"/>
+        </set>
+    </class>
+</hibernate-mapping>

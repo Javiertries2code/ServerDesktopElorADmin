@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.Course" optimistic-lock="none" table="course">
+        <id name="idCourse" type="int">
+            <column name="id_course"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="name" type="string">
+            <column length="45" name="name"/>
+        </property>
+        <set fetch="select" inverse="true" lazy="true" name="registrations" table="registration">
+            <key>
+                <column name="id_course" not-null="true"/>
+            </key>
+            <one-to-many class="DBEntities.Registration"/>
+        </set>
+        <set fetch="select" inverse="false" lazy="true" name="subjects" table="subject_course">
+            <key>
+                <column name="id_course" not-null="true"/>
+            </key>
+            <many-to-many entity-name="DBEntities.Subject">
+                <column name="id_subject" not-null="true"/>
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

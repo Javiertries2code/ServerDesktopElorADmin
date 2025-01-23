@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.Teacher" optimistic-lock="none" table="teacher">
+        <id name="idTeacher" type="int">
+            <column name="id_teacher"/>
+            <generator class="identity"/>
+        </id>
+        <property name="registered" type="java.lang.Boolean">
+            <column name="registered"/>
+        </property>
+        <property name="passwordHashed" type="string">
+            <column length="60" name="password_hashed"/>
+        </property>
+        <property name="passwordNotHashed" type="java.lang.Integer">
+            <column name="password_not_hashed"/>
+        </property>
+        <property name="email" type="string">
+            <column length="45" name="email" unique="true"/>
+        </property>
+        <property name="dni" type="string">
+            <column length="12" name="dni" unique="true"/>
+        </property>
+        <property name="name" type="string">
+            <column length="45" name="name"/>
+        </property>
+        <property name="lastName" type="string">
+            <column length="45" name="last_name"/>
+        </property>
+        <property name="address" type="string">
+            <column length="45" name="address"/>
+        </property>
+        <property name="phone1" type="string">
+            <column length="12" name="phone1"/>
+        </property>
+        <property name="phone2" type="string">
+            <column length="12" name="phone2"/>
+        </property>
+        <set fetch="select" inverse="true" lazy="true" name="subjects" table="subject">
+            <key>
+                <column name="id_teacher"/>
+            </key>
+            <one-to-many class="DBEntities.Subject"/>
+        </set>
+        <set fetch="select" inverse="true" lazy="true" name="meetingRequestsForIdHost" table="meeting_request">
+            <key>
+                <column name="id_host"/>
+            </key>
+            <one-to-many class="DBEntities.MeetingRequest"/>
+        </set>
+        <set fetch="select" inverse="true" lazy="true" name="meetingRequestsForIdGuest" table="meeting_request">
+            <key>
+                <column name="id_guest"/>
+            </key>
+            <one-to-many class="DBEntities.MeetingRequest"/>
+        </set>
+    </class>
+</hibernate-mapping>
