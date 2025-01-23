@@ -19,7 +19,7 @@ public class ManagerStudent {
 		session = sessionFactory.openSession();
 	}
 	
-	public void getUserStudent() {
+	public List<Student> getUserStudent() {
 		String query = "from Student";
 		Query<Student> queryResult = session.createQuery(query);
 		List<Student> results = queryResult.list();
@@ -35,5 +35,6 @@ public class ManagerStudent {
 			System.out.println(student.getLastName());
 			System.out.println("");
 		}
+		return results;
 	}
 }
