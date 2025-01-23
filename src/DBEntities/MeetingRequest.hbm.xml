@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.MeetingRequest" optimistic-lock="none" table="meeting_request">
+        <id name="idMeetingRequest" type="int">
+            <column name="id_meeting_request"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one class="DBEntities.Teacher" fetch="select" name="teacherByIdHost">
+            <column name="id_host"/>
+        </many-to-one>
+        <many-to-one class="DBEntities.Teacher" fetch="select" name="teacherByIdGuest">
+            <column name="id_guest"/>
+        </many-to-one>
+        <many-to-one class="DBEntities.Meeting" fetch="select" name="meeting">
+            <column name="id_meeting"/>
+        </many-to-one>
+        <property name="idTeacher" type="java.lang.Integer">
+            <column name="id_teacher"/>
+        </property>
+        <property name="status" type="string">
+            <column length="13" name="status"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated Jan 23, 2025, 8:11:36 PM by Hibernate Tools 6.5.1.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class catalog="ElorBase" name="DBEntities.Registration" optimistic-lock="none" table="registration">
+        <id name="idRegistration" type="int">
+            <column name="id_registration"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one class="DBEntities.Student" fetch="select" name="student">
+            <column name="id_student" not-null="true"/>
+        </many-to-one>
+        <many-to-one class="DBEntities.Course" fetch="select" name="course">
+            <column name="id_course" not-null="true"/>
+        </many-to-one>
+        <property name="typeRegistration" type="string">
+            <column length="7" name="type_registration"/>
+        </property>
+        <property name="onDual" type="java.lang.Boolean">
+            <column name="on_dual"/>
+        </property>
+        <property name="dateRegistration" type="timestamp">
+            <column length="19" name="date_registration"/>
+        </property>
+    </class>
+</hibernate-mapping>
