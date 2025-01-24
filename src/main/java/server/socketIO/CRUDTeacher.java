@@ -3,12 +3,18 @@ package server.socketIO;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 
+import DBManagers.ManagerSubject;
+import DBManagers.ManagerTeacher;
 import server.socketIO.model.MessageInput;
 
 public class CRUDTeacher extends SocketIOModule{
+	
+	 private final ManagerTeacher managerTeacher;
+
 
 	public CRUDTeacher(SocketIOServer server) {
 		super(server);
+		this.managerTeacher = new ManagerTeacher();
 		// TODO Auto-generated constructor stub
 	}
 
