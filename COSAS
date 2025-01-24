@@ -1,0 +1,22 @@
+Got the idea of extending Socketio by creating crud classes, and just instanciating them
+
+
+	public SocketIOModule(SocketIOServer server) {
+		super();
+		this.server = server;
+		
+		CRUDStudent crudStudent = new CRUDStudent(server);
+
+		// Default events (for control the connection of clients)
+		server.addConnectListener(onConnect());
+		server.addDisconnectListener(onDisconnect());
+
+		// Custom events
+		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, this.login());
+		server.addEventListener(Events.ON_GET_ALL_STUDENTS .value, MessageInput.class, crudStudent.getAllStudents());
+		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
+	}
+	
+	it should do this way for all the other cruds
+	
+	

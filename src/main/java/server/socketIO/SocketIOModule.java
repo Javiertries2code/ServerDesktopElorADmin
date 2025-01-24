@@ -27,6 +27,8 @@ public class SocketIOModule {
 	public SocketIOModule(SocketIOServer server) {
 		super();
 		this.server = server;
+		
+		CRUDStudent crudStudent = new CRUDStudent(server);
 
 		// Default events (for control the connection of clients)
 		server.addConnectListener(onConnect());
@@ -34,7 +36,7 @@ public class SocketIOModule {
 
 		// Custom events
 		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, this.login());
-		server.addEventListener(Events.ON_GET_ALL.value, MessageInput.class, this.getAll());
+		server.addEventListener(Events.ON_GET_ALL_STUDENTS .value, MessageInput.class, crudStudent.getAllStudents());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
 	}
 
@@ -83,7 +85,7 @@ public class SocketIOModule {
 		});
 	}
 
-	private DataListener<MessageInput> getAll() {
+	private DataListener<MessageInput> getAllStudents() {
 		return ((client, data, ackSender) -> {
 			// This time, we simply write the message in data
 			System.out.println("Client from " + client.getRemoteAddress() + " wants to getAll");
@@ -122,7 +124,7 @@ public class SocketIOModule {
 
 			// ... and we send it back to the client inside a MessageOutput
 			MessageOutput messageOutput = new MessageOutput(answerMessage);
-			client.sendEvent(Events.ON_GET_ALL_ANSWER.value, messageOutput);
+			client.sendEvent(Events.ON_GET_ALL_STUDENTS_ANSWER.value, messageOutput);
 		});
 	}
 
