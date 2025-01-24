@@ -17,6 +17,6 @@ Got the idea of extending Socketio by creating crud classes, and just instanciat
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
 	}
 	
-	it should do this way for all the other cruds
+	**Allcruds extending from socketio done, but empty
 	
 	

@@ -1,1 +1,4 @@
+	**Allcruds extending from socketio done, but empty, managers are to come
+
+
 Try retrieving a user with login, and send him to a succesfuullogin, or a not registered, and act accordingly in the client
