@@ -11,7 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import DBEntities.Student;
+import DBEntities.Teacher;
+import DBManagers.ManagerLogin;
 import DBManagers.ManagerStudent;
+import DBManagers.ManagerTeacher;
 import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
 import server.socketIO.model.MessageOutput;
@@ -27,7 +30,7 @@ public class SocketIOModule {
 	public SocketIOModule(SocketIOServer server) {
 		super();
 		this.server = server;
-		
+
 		CRUDStudent crudStudent = new CRUDStudent(server);
 		CRUDTeacher crudTeacher = new CRUDTeacher(server);
 		CRUDMeeting crudMeeting = new CRUDMeeting(server);
@@ -36,15 +39,14 @@ public class SocketIOModule {
 		CRUDSubject crudSubject = new CRUDSubject(server);
 		CRUDMeetingRequest crudMeetingRequest = new CRUDMeetingRequest(server);
 		CRUDRegistration crudRegistration = new CRUDRegistration(server);
-		
 
 		// Default events (for control the connection of clients)
 		server.addConnectListener(onConnect());
 		server.addDisconnectListener(onDisconnect());
 
 		// Custom events
-		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, this.login());
-		server.addEventListener(Events.ON_GET_ALL_STUDENTS .value, MessageInput.class, crudStudent.index());
+		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, this.userLogin());
+		server.addEventListener(Events.ON_GET_ALL_STUDENTS.value, MessageInput.class, crudStudent.index());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
 	}
 
@@ -64,8 +66,38 @@ public class SocketIOModule {
 		});
 	}
 
-	// Custom events
 
+	private DataListener<MessageInput> userLogin() {
+		return ((client, data, ackSender) -> {
+			// This time, we simply write the message in data
+			System.out.println("Client from " + client.getRemoteAddress() + " wants to getAll Teachers");
+
+		String userStatus = null;
+		ManagerLogin mL = new ManagerLogin();
+		userStatus = mL.validUser();
+//TODO, retrieve the objects inm manager login, perhaps with a map
+		// Parse the teacher object to JSON
+		String answerMessage = new Gson().toJson(teachers);
+		MessageOutput messageOutput = new MessageOutput(answerMessage);
+
+		// Handle user status with a switch case
+		switch (userStatus) {
+			case "registered":
+				client.sendEvent(Events.ON_LOGIN_SUCCESS_ANSWER.value, messageOutput);
+				break;
+			case "not registered":
+				client.sendEvent(Events.ON_NOT_REGISTERED.value, messageOutput);
+				break;
+			case "not existent":
+				client.sendEvent(Events.ON_LOGIN_USER_NOT_FOUND_ANSWER.value, messageOutput);
+				break;
+			default:
+				System.out.println("Unknown user status: " + userStatus);
+		}
+		});
+	}
+
+	//TODO gotta make the login going through oth teachers and students
 	private DataListener<MessageInput> login() {
 		return ((client, data, ackSender) -> {
 			System.out.println("Client from " + client.getRemoteAddress() + " wants to login");
@@ -98,35 +130,19 @@ public class SocketIOModule {
 			// This time, we simply write the message in data
 			System.out.println("Client from " + client.getRemoteAddress() + " wants to getAll");
 
-			// We access to database and... we get a bunch of people
-			 List<Student> students = new ArrayList<Student>();
+			List<Student> students = new ArrayList<Student>();
 
-//		        students.add(new Student(true, "email1@example.com", "hashedPassword1", 1234, "12345678A", "John", "Doe", "123 Main St", "123456789", "987654321", null, null));
-//		        students.add(new Student(false, "email2@example.com", "hashedPassword2", 5678, "87654321B", "Jane", "Smith", "456 Elm St", "123123123", "321321321", null, null));
-//		        students.add(new Student(true, "email3@example.com", "hashedPassword3", 9101, "12349876C", "Alice", "Johnson", "789 Oak St", "456456456", "654654654", null, null));
-//		        students.add(new Student(true, "email4@example.com", "hashedPassword4", 1121, "56781234D", "Bob", "Williams", "101 Pine St", "789789789", "987987987", null, null));
-//		        students.add(new Student(false, "email5@example.com", "hashedPassword5", 3141, "43219876E", "Charlie", "Brown", "202 Cedar St", "321654987", "789123456", null, null));
-//
-//		        // Print the list
-//		        for (Student student : students) {
-//		            System.out.println("ID: " + student.getIdStudent());
-//		            System.out.println("Name: " + student.getName() + " " + student.getLastName());
-//		            System.out.println("Email: " + student.getEmail());
-//		            System.out.println("DNI: " + student.getDni());
-//		            System.out.println("-----------------------");
-//		        }
-			 
-			 ManagerStudent  mS = new ManagerStudent();
-			 students = mS.getUserStudent();
-			 
-			  for (Student student : students) {
-		            System.out.println("ID: " + student.getIdStudent());
-		            System.out.println("Name: " + student.getName() + " " + student.getLastName());
-		            System.out.println("Email: " + student.getEmail());
-		            System.out.println("DNI: " + student.getDni());
-		            System.out.println("-----------------------");
-		        }
-			  Thread.sleep(1000);
+			ManagerStudent mS = new ManagerStudent();
+			students = mS.getUserStudent();
+
+			for (Student student : students) {
+				System.out.println("ID: " + student.getIdStudent());
+				System.out.println("Name: " + student.getName() + " " + student.getLastName());
+				System.out.println("Email: " + student.getEmail());
+				System.out.println("DNI: " + student.getDni());
+				System.out.println("-----------------------");
+			}
+			// Thread.sleep(1000);
 			// We parse the answer into JSON
 			String answerMessage = new Gson().toJson(students);
 
@@ -155,8 +171,8 @@ public class SocketIOModule {
 			System.out.println(userName + " loged out");
 		});
 	}
-	
-	// Server control 
+
+	// Server control
 
 	public void start() {
 		server.start();

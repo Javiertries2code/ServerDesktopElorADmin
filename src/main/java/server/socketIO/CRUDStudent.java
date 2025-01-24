@@ -28,7 +28,7 @@ public class CRUDStudent extends SocketIOModule {
 
             // Acceso a la base de datos usando ManagerStudent
             ManagerStudent manager = new ManagerStudent();
-            List<Student> students = manager.getUserStudent();
+            List<Student> students = manager.getAllStudents();
 
             // Mostrar los resultados (solo para depuración)
             for (Student student : students) {
@@ -42,6 +42,7 @@ public class CRUDStudent extends SocketIOModule {
             client.sendEvent(Events.ON_GET_ALL_STUDENTS_ANSWER.value, messageOutput);
         };
     }
+	
 	
 	 
 

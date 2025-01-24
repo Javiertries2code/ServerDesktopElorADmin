@@ -12,8 +12,9 @@ public enum Events {
     
     ON_NOT_REGISTERED ("notRegistered"),
     
-    ON_LOGIN_CORRECT ("onLoginCorrect"),
-    ON_LOGIN_CORRECT_ANSWER ("onLoginCorrectAnswer"),
+    ON_LOGIN_USER_NOT_FOUND_ANSWER ("onLoginUsernotFound"),
+    
+    ON_LOGIN_SUCCESS_ANSWER ("onLoginCorrectAnswer"),
 
     ON_SUCCESSFUL_REGISTRATION ("onSuccessfulRegistration"),
     ON_SUCCESSFUL_REGISTRATION_ANSWER ("onSuccessfulRegistrationAnswer"),

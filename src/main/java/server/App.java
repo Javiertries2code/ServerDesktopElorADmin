@@ -23,8 +23,6 @@ public class App {
 		SocketIOServer server = new SocketIOServer(config);
 		SocketIOModule module = new SocketIOModule(server);
 		module.start();
-//		
-//		ManagerStudent  mS = new ManagerStudent();
-//		mS.getUserStudent();
+
 	}
 }
