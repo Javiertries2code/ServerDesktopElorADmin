@@ -29,6 +29,14 @@ public class SocketIOModule {
 		this.server = server;
 		
 		CRUDStudent crudStudent = new CRUDStudent(server);
+		CRUDTeacher crudTeacher = new CRUDTeacher(server);
+		CRUDMeeting crudMeeting = new CRUDMeeting(server);
+		CRUDSchedule crudSchedule = new CRUDSchedule(server);
+		CRUDCourse crudCourse = new CRUDCourse(server);
+		CRUDSubject crudSubject = new CRUDSubject(server);
+		CRUDMeetingRequest crudMeetingRequest = new CRUDMeetingRequest(server);
+		CRUDRegistration crudRegistration = new CRUDRegistration(server);
+		
 
 		// Default events (for control the connection of clients)
 		server.addConnectListener(onConnect());
@@ -36,7 +44,7 @@ public class SocketIOModule {
 
 		// Custom events
 		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, this.login());
-		server.addEventListener(Events.ON_GET_ALL_STUDENTS .value, MessageInput.class, crudStudent.getAllStudents());
+		server.addEventListener(Events.ON_GET_ALL_STUDENTS .value, MessageInput.class, crudStudent.index());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
 	}
 

@@ -18,16 +18,18 @@ public class ManagerStudent {
 		sessionFactory = HibernateUtils.getSessionFactory();
 		session = sessionFactory.openSession();
 	}
-	
+
 	public List<Student> getUserStudent() {
 		String query = "from Student";
 		Query<Student> queryResult = session.createQuery(query);
+		System.out.println("getUserStudent geti maxresults 10 to test, gotta delete");
+		queryResult.setMaxResults(10);
 		List<Student> results = queryResult.list();
 
 		for (int i = 0; i < results.size(); i++) {
 			Student student = results.get(i);
 			System.out.println("--------- Estudiante " + (i + 1) + " ---------");
-		
+
 			System.out.println("Nombre");
 			System.out.println(student.getName());
 

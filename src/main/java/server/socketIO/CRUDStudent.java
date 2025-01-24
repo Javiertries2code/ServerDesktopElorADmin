@@ -22,7 +22,7 @@ public class CRUDStudent extends SocketIOModule {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DataListener<MessageInput> getAllStudents() {
+	public DataListener<MessageInput> index() {
         return (client, data, ackSender) -> {
             System.out.println("Client from " + client.getRemoteAddress() + " wants to getAll");
 
@@ -42,4 +42,34 @@ public class CRUDStudent extends SocketIOModule {
             client.sendEvent(Events.ON_GET_ALL_STUDENTS_ANSWER.value, messageOutput);
         };
     }
+	
+	 
+
+	    public DataListener<MessageInput> create() {
+	        return (client, data, ackSender) -> {
+	            // TODO: Implement create logic
+	        };
+	    }
+
+	    public DataListener<MessageInput> show() {
+	        return (client, data, ackSender) -> {
+	            // TODO: Implement show logic
+	        };
+	    }
+
+	    public DataListener<MessageInput> update() {
+	        return (client, data, ackSender) -> {
+	            // TODO: Implement update logic
+	        };
+	    }
+
+	    public DataListener<MessageInput> delete() {
+	        return (client, data, ackSender) -> {
+	            // TODO: Implement delete logic
+	        };
+	    }
+	
+	
+	
+	
 }
