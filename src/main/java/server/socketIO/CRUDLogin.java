@@ -29,17 +29,35 @@ public class CRUDLogin {
 
 				// Extracting the JSON message
 				String message = data.getMessage();
+				//System.out.println(message   + " the mensaje ");
+
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
+				
+				
+				
+				
+				String email = null;
+				 String password  =null;
+				// This is to get all values passed in the json, didnt find how to"
+				if (jsonObject.has("nameValuePairs")) {
+				    JsonObject nameValuePairs = jsonObject.getAsJsonObject("nameValuePairs");
+				     email = nameValuePairs.has("email") ? nameValuePairs.get("email").getAsString() : null;
+				     password = nameValuePairs.has("password") ? nameValuePairs.get("password").getAsString() : null;
 
-				// Extracting email and password from the JSON
-				String email = jsonObject.get("email").getAsString();
-				String password = jsonObject.get("password").getAsString();
-				System.out.println(" email  ->" + email + "  passsword -> "+password);
+				    System.out.println("Email: " + email + " Password: " + password);
+				} else {
+				    System.out.println("El JSON no contiene 'nameValuePairs'");
+				}
+				
+				System.out.println("calling to managerLogin.validUSer ---CRUDLOGIN--" + email +"--- "+password);
+				
 
 				// Validate user with extracted credentials
 				ManagerLogin mL = new ManagerLogin();
-				Map<String, Object> userStatus = mL.validUser(email, password);
+				
+//				Map<String, Object> userStatus = mL.validUser(email, password);
+				Map<String, Object> userStatus = mL.validUser("teacher1@email.com", "123");
 
 				// Extract and convert the user object
 				Object user = userStatus.get("user");

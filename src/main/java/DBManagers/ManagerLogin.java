@@ -28,15 +28,17 @@ public class ManagerLogin {
 	}
 
 	public Map<String, Object> validUser(String email, String password) {
-		String query = "from Teacher where email = :email and password = :password";
+		System.out.println("In managerLogin.validUSer ---CRUDLOGIN--" + email +"--- "+password);
+		
+		String query = "from Teacher where email = :email and passwordNotHashed = :passwordNotHashed";
 		Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
 		queryResult.setParameter("email", email);
-		queryResult.setParameter("password", password);
+		queryResult.setParameter("passwordNotHashed", password);
 
 		Teacher result = queryResult.uniqueResult();
 
 		if (result != null) {
-			System.out.println("Found Teacher with email: " + result.getEmail());
+			System.out.println("Found Teacher with email: " + result.getEmail()+ "--nname  = " + result.getName());
 			if (Boolean.TRUE.equals(result.getRegistered())) {
 				return Map.of(
 					"status", "registered",
@@ -60,7 +62,7 @@ public class ManagerLogin {
 
 		Student studentResult = studentQueryResult.uniqueResult();
 		if (studentResult != null) {
-			System.out.println("Found Student with email: " + studentResult.getEmail());
+			System.out.println("Found Student with email: " + studentResult.getEmail()+ "--nname  = " + studentResult.getName());
 			if (Boolean.TRUE.equals(studentResult.getRegistered())) {
 				return Map.of(
 					"status", "registered",
