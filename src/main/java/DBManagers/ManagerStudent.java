@@ -22,8 +22,8 @@ public class ManagerStudent {
 	public List<Student> getAllStudents() {
 		String query = "from Student";
 		Query<Student> queryResult = session.createQuery(query);
-//		System.out.println("getUserStudent geti maxresults 10 to test, gotta delete");
-//		queryResult.setMaxResults(10);
+		System.out.println("getUserStudent geti maxresults 10 to test, gotta delete");
+	queryResult.setMaxResults(3);
 		List<Student> results = queryResult.list();
 
 //

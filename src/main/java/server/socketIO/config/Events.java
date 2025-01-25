@@ -7,6 +7,8 @@ public enum Events {
 
 	ON_LOGIN ("onLogin"),
     ON_LOGOUT ("onLogout"),
+    
+    ON_STOP_SERVER("onStopServer"),
 
     ON_LOGIN_ANSWER ("onLoginAnswer"),
     
@@ -15,11 +17,17 @@ public enum Events {
     ON_LOGIN_USER_NOT_FOUND_ANSWER ("onLoginUsernotFound"),
     
     ON_LOGIN_SUCCESS_ANSWER ("onLoginCorrectAnswer"),
+    
+    ON_RESET_PASSWORD("OnResetPassword"),
+    ON_RESET_PASSWORD_ANSWER("OnResetPasswordAnswer"),
+
 
     ON_SUCCESSFUL_REGISTRATION ("onSuccessfulRegistration"),
     ON_SUCCESSFUL_REGISTRATION_ANSWER ("onSuccessfulRegistrationAnswer"),
 
     ON_DB_ERROR ("onDbError"),
+    
+    
 
     
 

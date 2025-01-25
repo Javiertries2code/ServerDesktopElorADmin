@@ -5,12 +5,16 @@ import com.corundumstudio.socketio.listener.DataListener;
 
 import server.socketIO.model.MessageInput;
 
-public class CRUDMeetingRequest extends SocketIOModule{
+public class CRUDMeetingRequest {
 
+	private SocketIOServer server = null;
+
+	
 	public CRUDMeetingRequest(SocketIOServer server) {
-		super(server);
+		this.server = server;
 		// TODO Auto-generated constructor stub
 	}
+	
 	 public DataListener<MessageInput> index() {
 	        return (client, data, ackSender) -> {
 	            // TODO: Implement index logic

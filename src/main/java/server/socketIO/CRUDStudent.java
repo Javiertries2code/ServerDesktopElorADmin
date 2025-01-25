@@ -15,17 +15,20 @@ import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
 import server.socketIO.model.MessageOutput;
 
-public class CRUDStudent extends SocketIOModule {
+public class CRUDStudent {
+
+	
+	private SocketIOServer server = null;
 
     public CRUDStudent(SocketIOServer server) {
-		super(server);
+		this.server = server;
 		// TODO Auto-generated constructor stub
 	}
 
 	public DataListener<MessageInput> index() {
         return (client, data, ackSender) -> {
             System.out.println("Client from " + client.getRemoteAddress() + " wants to getAll");
-
+System.out.println("From extended CRUDSTUDENT");
             // Acceso a la base de datos usando ManagerStudent
             ManagerStudent manager = new ManagerStudent();
             List<Student> students = manager.getAllStudents();
