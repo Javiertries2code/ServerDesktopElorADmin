@@ -30,7 +30,7 @@ public class SocketIOModule {
 	private CRUDStudent crudStudent = new CRUDStudent(server);
 	private CRUDLogin crudLogin = new CRUDLogin(server);
 
-//	private CRUDTeacher crudTeacher = new CRUDTeacher(server);
+	//private CRUDTeacher crudTeacher = new CRUDTeacher(server);
 //	private CRUDMeeting crudMeeting = new CRUDMeeting(server);
 //	private CRUDSchedule crudSchedule = new CRUDSchedule(server);
 //	private CRUDCourse crudCourse = new CRUDCourse(server);
@@ -57,7 +57,7 @@ public class SocketIOModule {
 		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, crudLogin.userLogin());
 		server.addEventListener(Events.ON_GET_ALL_STUDENTS.value, MessageInput.class, crudStudent.index());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
-	//	server.addEventListener(Events.ON_RESET_PASSWORD.value, MessageInput.class, managerLogin.resetPassword());
+		server.addEventListener(Events.ON_RESET_PASSWORD.value, MessageInput.class, crudLogin.resetPassword());
 		//server.addEventListener(Events.ON_STOP_SERVER.value, MessageInput.class, this.stop());
 
 		//server.addEventListener(Events.ON_STOP_SERVER.value, MessageInput.class, this.stop());

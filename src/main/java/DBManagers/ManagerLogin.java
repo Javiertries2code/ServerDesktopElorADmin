@@ -40,6 +40,8 @@ public class ManagerLogin {
 		if (result != null) {
 			System.out.println("Found Teacher with email: " + result.getEmail()+ "--nname  = " + result.getName());
 			if (Boolean.TRUE.equals(result.getRegistered())) {
+				System.out.println("returning  registered");
+
 				return Map.of(
 					"status", "registered",
 					"type", "Teacher",
@@ -47,6 +49,7 @@ public class ManagerLogin {
 				);
 			} else {
 				sendPasswordEmail(result.getEmail());
+				System.out.println("returning not registered");
 				return Map.of(
 					"status", "not registered",
 					"type", "Teacher",
@@ -86,6 +89,8 @@ public class ManagerLogin {
 			"user", null
 		);
 	}
+	
+	
 	/*
 	public DataListener<MessageInput> resetPassword() {
 		return ((client, data, ackSender) -> {
@@ -130,9 +135,9 @@ public class ManagerLogin {
 		});
 	}
 	
-	
-*/
-	private boolean findByEmail(String email) {
+	*/
+
+	public boolean findByEmail(String email) {
 	    String query = "from Teacher where email = :email";
 	    Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
 	    queryResult.setParameter("email", email);
@@ -164,6 +169,7 @@ public class ManagerLogin {
 		
 		
 		System.out.println("Sending password setup email to: " + email);
+		return;
 	}
 
 	

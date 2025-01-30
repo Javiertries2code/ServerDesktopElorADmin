@@ -30,7 +30,8 @@ public enum Events {
     
 
     
-
+    ON_GET_FULL_STUDENT("onGetWholeStudentInfo"),
+    ON_GET_FULL_STUDENT_ANSWER("onGetWholeStudentInfoAnswer"),
 
     
 ON_GET_ALL_STUDENTS ("onGetAllStudents"),

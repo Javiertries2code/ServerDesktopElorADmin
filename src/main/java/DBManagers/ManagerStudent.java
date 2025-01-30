@@ -23,7 +23,7 @@ public class ManagerStudent {
 		String query = "from Student";
 		Query<Student> queryResult = session.createQuery(query);
 		System.out.println("getUserStudent geti maxresults 10 to test, gotta delete");
-	queryResult.setMaxResults(3);
+	//queryResult.setMaxResults(10);
 		List<Student> results = queryResult.list();
 
 //

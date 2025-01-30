@@ -25,6 +25,7 @@ public class Teacher implements java.io.Serializable {
 	private Set meetingRequestsForIdGuest = new HashSet(0);
 
 	public Teacher() {
+		
 	}
 
 	public Teacher(Boolean registered, String passwordHashed, Integer passwordNotHashed, String email, String dni,
