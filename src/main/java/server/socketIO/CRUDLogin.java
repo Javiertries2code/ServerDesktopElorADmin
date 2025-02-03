@@ -70,10 +70,14 @@ public class CRUDLogin {
 				//the objects goes as a json string, this is why
 				String answerMessage;
 				 if (user instanceof Teacher) {
+						System.out.println("user instanceof Teacher)");
+
 			            Teacher teacher = (Teacher) user; // Cast user to Teacher
 			            TeacherDTO teacherDTO = new TeacherDTO(teacher); // Convert to DTO
 			            answerMessage = gson.toJson(teacherDTO); // Convert DTO to JSON
 			        } else if (user instanceof Student) {
+						System.out.println("user instanceof Student)");
+
 			            Student student = (Student) user; // Cast user to Student
 			            StudentDTO studentDTO = new StudentDTO(student); // Convert to DTO
 			            answerMessage = gson.toJson(studentDTO); // Convert DTO to JSON
@@ -81,6 +85,7 @@ public class CRUDLogin {
 			            answerMessage = gson.toJson("User is not a Teacher or Student");
 			        } else {
 			            answerMessage = gson.toJson("User not found or invalid credentials");
+
 			        }
 				//At least i send the not found messge, to avoid null problems, if any
 				MessageOutput messageOutput = new MessageOutput(answerMessage);
@@ -93,10 +98,11 @@ public class CRUDLogin {
 				// Extract status from the map
 				switch (status) {
 				case "registered":
+					System.out.println("YES REGISTERED");
 					client.sendEvent(Events.ON_LOGIN_SUCCESS_ANSWER.value, messageOutput);
 					break;
 				case "not registered":
-					System.out.println("joder");
+					System.out.println("NOT REGISTERED");
 					client.sendEvent(Events.ON_NOT_REGISTERED.value, messageOutput);
 					break;
 				case "not existent":

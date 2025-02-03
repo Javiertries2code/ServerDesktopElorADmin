@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
-import DBEntities.*;
+import DBEntities.Student;
 import utils.HibernateUtils;
 
 public class ManagerStudent {

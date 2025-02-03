@@ -6,15 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
-import com.corundumstudio.socketio.listener.DataListener;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import DBEntities.Student;
 import DBEntities.Teacher;
-import server.socketIO.config.Events;
-import server.socketIO.model.MessageInput;
-import server.socketIO.model.MessageOutput;
 import utils.HibernateUtils;
 
 public class ManagerLogin {
@@ -30,16 +23,19 @@ public class ManagerLogin {
 	public Map<String, Object> validUser(String email, String password) {
 		System.out.println("In managerLogin.validUSer ---CRUDLOGIN--" + email +"--- "+password);
 		
+		email =email.trim().toLowerCase();
+		password = password.trim();
+		
+		System.out.println("SEARCHING FOR TEACHERS");
 		String query = "from Teacher where email = :email and passwordNotHashed = :passwordNotHashed";
 		Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
 		queryResult.setParameter("email", email);
 		queryResult.setParameter("passwordNotHashed", password);
-
 		Teacher result = queryResult.uniqueResult();
 
 		if (result != null) {
 			System.out.println("Found Teacher with email: " + result.getEmail()+ "--nname  = " + result.getName());
-			if (Boolean.TRUE.equals(result.getRegistered())) {
+			if ((result.getRegistered())) {
 				System.out.println("returning  registered");
 
 				return Map.of(
@@ -48,7 +44,7 @@ public class ManagerLogin {
 					"user", result
 				);
 			} else {
-				sendPasswordEmail(result.getEmail());
+				//sendPasswordEmail(result.getEmail());
 				System.out.println("returning not registered");
 				return Map.of(
 					"status", "not registered",
@@ -57,22 +53,25 @@ public class ManagerLogin {
 				);
 			}
 		}
+		System.out.println("SEARCHING FOR STUDENTS");
 
-		query = "from Student where email = :email and password = :password";
+		query = "from Student where email = :email and passwordNotHashed = :passwordNotHashed";
 		Query<Student> studentQueryResult = session.createQuery(query, Student.class);
 		studentQueryResult.setParameter("email", email);
-		studentQueryResult.setParameter("password", password);
+		studentQueryResult.setParameter("passwordNotHashed", password);
 
 		Student studentResult = studentQueryResult.uniqueResult();
 		if (studentResult != null) {
 			System.out.println("Found Student with email: " + studentResult.getEmail()+ "--nname  = " + studentResult.getName());
-			if (Boolean.TRUE.equals(studentResult.getRegistered())) {
+			if ((studentResult.getRegistered())) {
 				return Map.of(
 					"status", "registered",
 					"type", "Student",
 					"user", studentResult
 				);
 			} else {
+				System.out.println("SEARCHING FOR STUDENTS");
+
 				sendPasswordEmail(studentResult.getEmail());
 				return Map.of(
 					"status", "not registered",

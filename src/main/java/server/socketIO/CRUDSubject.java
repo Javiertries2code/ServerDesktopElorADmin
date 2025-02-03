@@ -3,7 +3,6 @@ package server.socketIO;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 
-import DBManagers.ManagerStudent;
 import DBManagers.ManagerSubject;
 import server.socketIO.model.MessageInput;
 

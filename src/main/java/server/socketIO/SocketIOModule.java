@@ -1,9 +1,5 @@
 package server.socketIO;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
@@ -11,14 +7,9 @@ import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import DBEntities.Student;
-import DBEntities.Teacher;
 import DBManagers.ManagerLogin;
-import DBManagers.ManagerStudent;
-import DBManagers.ManagerTeacher;
 import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
-import server.socketIO.model.MessageOutput;
 
 /**
  * Server control main configuration class
