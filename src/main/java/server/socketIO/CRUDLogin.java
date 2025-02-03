@@ -113,7 +113,51 @@ public class CRUDLogin {
 				}
 			});
 		}
+	  
+	  /*
+	  public DataListener<MessageInput> resetPassword() {
+			return ((client, data, ackSender) -> {
+				System.out.println("Client from " + client.getRemoteAddress() + " requested password reset");
 
+				// Extracting the JSON message
+				String message = data.getMessage();
+				Gson gson = new Gson();
+				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
+
+				// Validate input JSON
+				if (!jsonObject.has("email")) {
+					System.out.println("Invalid request: email is missing");
+					client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, new MessageOutput("Invalid request: email is missing"));
+					return;
+				}
+
+				// Extract email from the JSON
+				String email = jsonObject.get("email").getAsString();
+
+				// Validate user with extracted email
+				ManagerLogin mL = new ManagerLogin();
+				boolean userFound;
+				String responseMessage;
+
+				try {
+					userFound = mL.findByEmail(email);
+					if (userFound) {
+						// TODO: Call method to send the reset password email
+						responseMessage = "An email with a new password was delivered";
+					} else {
+						responseMessage = "No such user found in the database";
+					}
+				} catch (Exception e) {
+					System.err.println("Error during password reset: " + e.getMessage());
+					responseMessage = "An error occurred while processing your request";
+				}
+
+				// Send response back to the client
+				MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
+				client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, messageOutput);
+			});
+		}
+		*/
 	  
 	  public DataListener<MessageInput> resetPassword() {
 			return ((client, data, ackSender) -> {
@@ -123,15 +167,21 @@ public class CRUDLogin {
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
 
-				if (!jsonObject.has("email")) {
-					System.out.println("Invalid request: email is missing");
-					client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, new MessageOutput("Invalid request: email is missing"));
-					return;
-				}
 
-				String email = jsonObject.get("email").getAsString();
+				String email = null;
+				 String password  =null;
 				
+				if (jsonObject.has("nameValuePairs")) {
+				    JsonObject nameValuePairs = jsonObject.getAsJsonObject("nameValuePairs" );
+				     email = nameValuePairs.has("email") ? nameValuePairs.get("email").getAsString() : null;
+
+				    System.out.println("Email:    " + email);
+				} else {
+				    System.out.println("El JSON no contiene 'nameValuePairs' enresetPassword");
+					client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, new MessageOutput("Invalid request: email is missing"));
+				}
 				
+			
 				System.out.println( "CRUD login got a request for a new password with email--- ");
 				// Validate user with extracted email
 				
@@ -142,11 +192,11 @@ public class CRUDLogin {
 				try {
 					userFound = mL.findByEmail(email);
 					if (userFound) {
-						// TODO: Call method to send the reset password email
+						
 						//mL.setNewPassword(email);
 						responseMessage = "Si el usuario existe, se habra enviado un email con su nueva conrasena";
 					} else {
-						responseMessage = "Si el usuario existe, se habra enviado un email con su nueva conrasena, para que el hacker no sepa quien esta o no";
+						responseMessage = "No se ha encontrado al usuario";
 					}
 				} catch (Exception e) {
 					System.err.println("Error during password reset: " + e.getMessage());

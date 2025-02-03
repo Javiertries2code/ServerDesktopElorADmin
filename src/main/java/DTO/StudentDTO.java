@@ -13,6 +13,8 @@ public class StudentDTO implements java.io.Serializable {
     private final String passwordHashed;
     private final Integer passwordNotHashed;
     private final String user_type;
+    private final String dni;
+
 
 
 
@@ -21,6 +23,7 @@ public class StudentDTO implements java.io.Serializable {
         this.id = student.getIdStudent();
         this.name = student.getName();
         this.lastName = student.getLastName();
+        this.dni = student.getDni();
         this.email = student.getEmail();
         this.passwordHashed = student.getPasswordHashed();
         this.passwordNotHashed = student.getPasswordNotHashed();
