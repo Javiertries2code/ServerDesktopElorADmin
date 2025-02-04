@@ -14,6 +14,9 @@ public class StudentDTO implements java.io.Serializable {
     private final Integer passwordNotHashed;
     private final String user_type;
     private final String dni;
+	private String address;
+	private String phone1;
+	private String phone2;
 
 
 
@@ -27,6 +30,9 @@ public class StudentDTO implements java.io.Serializable {
         this.email = student.getEmail();
         this.passwordHashed = student.getPasswordHashed();
         this.passwordNotHashed = student.getPasswordNotHashed();
+    	this.address= student.getAddress();
+    	this.phone1= student.getPhone1();
+    	this.phone2= student.getPhone2();
         this.user_type = "student";
 
 

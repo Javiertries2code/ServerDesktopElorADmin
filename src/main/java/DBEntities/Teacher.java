@@ -44,6 +44,7 @@ public class Teacher implements java.io.Serializable {
 		this.subjects = subjects;
 		this.meetingRequestsForIdHost = meetingRequestsForIdHost;
 		this.meetingRequestsForIdGuest = meetingRequestsForIdGuest;
+		
 	}
 
 	public int getIdTeacher() {
