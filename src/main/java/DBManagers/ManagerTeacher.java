@@ -30,12 +30,19 @@ public class ManagerTeacher {
 	
 	public String updateTeacher(String email, String name, String lastName, String address, String phone1,
 	        String phone2, String dni, String userType, String passwordHashed, String passwordNotHashed) {
-	    
+		
+		
+		System.out.println("Receivin managerTeacher-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
+
+		
+		
 	    String query = "from Teacher as e where email=:email";
 	    Query<Teacher> queryResult = session.createQuery(query);
 	    queryResult.setParameter("email", email);
 	    queryResult.setMaxResults(1);
 	    Teacher teacher = queryResult.uniqueResult();
+	    
+	    System.out.println(teacher.getName()+ "FROM QUERI TO DB");
 
 	    teacher.setEmail(email);
 	    teacher.setName(name);
@@ -44,6 +51,7 @@ public class ManagerTeacher {
 	    teacher.setPhone1(phone1);
 	    teacher.setPhone2(phone2);
 	    teacher.setDni(dni);
+	    teacher.setRegistered(true);
 	 
 	    teacher.setPasswordHashed(passwordHashed);
 	    teacher.setPasswordNotHashed(Integer.parseInt(passwordNotHashed));

@@ -130,7 +130,7 @@ public class CRUDStudent {
 				    System.out.println("El JSON no contiene 'nameValuePairs'");
 				}
 
-				System.out.println("calling to managerStudent-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
+			//	System.out.println("calling to managerStudent-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
 
 				
 				ManagerStudent mS = new ManagerStudent();

@@ -93,13 +93,13 @@ public class CRUDTeacher {
 				    System.out.println("El JSON no contiene 'nameValuePairs'");
 				}
 
-				System.out.println("calling to managerStudent-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
+				//System.out.println("calling to managerTeacher-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
 
 				
-				ManagerStudent mS = new ManagerStudent();
+				ManagerTeacher mS = new ManagerTeacher();
 				
 //				Map<String, Object> userStatus = mL.validUser(email, password);
-			String statusCode  = mS.updateStudent(email, name,lastName,address, phone1, phone2,dni,userType,passwordHashed,passwordNotHashed  );
+			String statusCode  = mS.updateTeacher(email, name,lastName,address, phone1, phone2,dni,userType,passwordHashed,passwordNotHashed  );
 	        
 	        };
 	    }
