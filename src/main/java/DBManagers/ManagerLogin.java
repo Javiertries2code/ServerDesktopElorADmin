@@ -74,7 +74,7 @@ public class ManagerLogin {
 		System.out.println("User not found in DB for email: " + email);
 		return Map.of("status", "not existent", "type", null, "user", null);
 	}
-
+/*
 	public String findReturnByEmail(String email) throws MessagingException {
 		EmailService eS = new EmailService();
 		String defaultPassword = "8888888";
@@ -88,7 +88,7 @@ public class ManagerLogin {
 	    if (result != null) {
 	        System.out.println("Found Teacher with email: " + result.getEmail());
 	        //RESETPASSWORD HERE:
-	      String resetComunication =  updatePasswordTeacher(email,defaultPassword,defaultEncryptedPassword )
+	      String resetComunication =  updatePasswordTeacher(email,defaultPassword,defaultEncryptedPassword );
 	        eS.sendMail(email, defaultPassword);
 	        
 	        return resetComunication;
@@ -102,7 +102,7 @@ public class ManagerLogin {
 	       
 	        if (studentResult != null) {
 	            System.out.println("Found Student with email: " + studentResult.getEmail());
-	            String resetComunication =  updatePasswordStudent(email,defaultPassword,defaultEncryptedPassword )
+	            String resetComunication =  updatePasswordStudent(email,defaultPassword,defaultEncryptedPassword );
 	        	   eS.sendMail(email, defaultPassword);
 	        	        
 	        	  return resetComunication;
@@ -112,52 +112,7 @@ public class ManagerLogin {
 	    return null;
 	}
 
-	private String updatePasswordStudent(String email, String defaultPassword, String defaultEncryptedPassword) {
-	
-
-			String query = "from Student as e where email=:email";
-			Query<Student> queryResult = session.createQuery(query);
-			queryResult.setParameter("email", email);
-			queryResult.setMaxResults(1);
-			Student student = queryResult.uniqueResult();
-
-			student.setPasswordHashed((String) defaultEncryptedPassword);
-			student.setPasswordNotHashed((int) Integer.parseInt(defaultPassword));
-
-			
-
-			Transaction tx = session.beginTransaction();
-
-			session.save(student);
-
-			tx.commit();
-			System.out.println("Insertada nueva contrasena!");
-
-				return "OK, pending to controll errors";}
-
-
-	private String updatePasswordTeacher(String email, String defaultPassword, String defaultEncryptedPassword) {
-		String query = "from Teacher as e where email=:email";
-		Query<Teacher> queryResult = session.createQuery(query);
-		queryResult.setParameter("email", email);
-		queryResult.setMaxResults(1);
-		Teacher teacher = queryResult.uniqueResult();
-
-		teacher.setPasswordHashed((String) defaultEncryptedPassword);
-		teacher.setPasswordNotHashed((int) Integer.parseInt(defaultPassword));
-
-		
-
-		Transaction tx = session.beginTransaction();
-
-		session.save(teacher);
-
-		tx.commit();
-		System.out.println("Insertada nueva contrasena!");
-
-			return "OK, pending to controll errors";}
-	
-
+	*/
 	public boolean findByEmail(String email) {
 		String query = "from Teacher where email = :email";
 		Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
