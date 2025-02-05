@@ -39,8 +39,6 @@ public class CRUDLogin {
 				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
 				
 				
-				
-				
 				String email = null;
 				 String password  =null;
 				// This is to get all values passed in the json, didnt find how to"
@@ -54,7 +52,7 @@ public class CRUDLogin {
 				    System.out.println("El JSON no contiene 'nameValuePairs'");
 				}
 				
-				System.out.println("calling to managerLogin.validUSer ---CRUDLOGIN--" + email +"--- "+password);
+				System.out.println("calling to managerLogin.validUSer ---CRUDLOGIN-- with" + email +"--- "+password);
 				
 
 				// Validate user with extracted credentials
@@ -62,13 +60,21 @@ public class CRUDLogin {
 				
 //				Map<String, Object> userStatus = mL.validUser(email, password);
 				Map<String, Object> userStatus = mL.validUser(email, password);
+				
+				
+				String answerMessage;
+
+              if (userStatus== null) {
+            	  System.out.println("GOT NULL IN VALID USER");
+		            answerMessage = gson.toJson("User not found or invalid credentials");
+              }else {
+            	  System.out.println("GOT a VALID USER");
 
 				// Extract and convert the user object
 				Object user = userStatus.get("user");
 				System.out.println("returned user-- user name--->"+ user.getClass());
 
 				//the objects goes as a json string, this is why
-				String answerMessage;
 				 if (user instanceof Teacher) {
 						System.out.println("user instanceof Teacher)");
 
@@ -84,16 +90,23 @@ public class CRUDLogin {
 			        } else if (user != null) {
 			            answerMessage = gson.toJson("User is not a Teacher or Student");
 			        } else {
-			            answerMessage = gson.toJson("User not found or invalid credentials");
+			            answerMessage = gson.toJson("What the fucking ever");
 
-			        }
+			        }}
 				//At least i send the not found messge, to avoid null problems, if any
 				MessageOutput messageOutput = new MessageOutput(answerMessage);
-
-				// Handle user status with a switch case
-				String status = (String) userStatus.get("status"); 
 				
-				System.out.println("status devuelto de ManagerLogin->" + status + user.getClass());
+				String status;
+				// Handle user status with a switch case
+				if(userStatus != null) {
+					status	= (String) userStatus.get("status"); 
+				}
+				else {
+					status = "not existant";
+				}
+				 
+				
+			//	System.out.println("status devuelto de ManagerLogin->" + status + user.getClass());
 				
 				// Extract status from the map
 				switch (status) {
@@ -105,11 +118,15 @@ public class CRUDLogin {
 					System.out.println("NOT REGISTERED");
 					client.sendEvent(Events.ON_NOT_REGISTERED.value, messageOutput);
 					break;
-				case "not existent":
+				case "not existant":
+					System.out.println("Not existant " + status);
+
 					client.sendEvent(Events.ON_LOGIN_USER_NOT_FOUND_ANSWER.value, messageOutput);
 					break;
 				default:
 					System.out.println("Unknown user status: " + status);
+					client.sendEvent(Events.ON_LOGIN_USER_NOT_FOUND_ANSWER.value, messageOutput);
+
 				}
 			});
 		}

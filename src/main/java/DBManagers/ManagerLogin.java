@@ -74,7 +74,7 @@ public class ManagerLogin {
 		}
 
 		System.out.println("User not found in DB for email: " + email);
-		return Map.of("status", "not existent", "type", null, "user", null);
+		return null;
 	}
 
 	/*

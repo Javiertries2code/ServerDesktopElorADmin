@@ -7,11 +7,11 @@ import server.socketIO.SocketIOModule;
 
 public class App {
 	
-		private static final String HOST_NAME =  "192.168.1.40" ;
+	//	private static final String HOST_NAME =  "172.19.0.1" ;
  //  private static final String HOST_NAME =  "10.0.22.43" ;
 
-	//private static final String HOST_NAME = "10.0.22.248";
-	private static final int PORT = 4005;
+	private static final String HOST_NAME = "10.0.22.43";
+	private static final int PORT = 4011;
 	
 	public static void main(String[] args) {
 		
