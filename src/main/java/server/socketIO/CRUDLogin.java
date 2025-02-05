@@ -161,6 +161,7 @@ public class CRUDLogin {
 	  
 	  public DataListener<MessageInput> resetPassword() {
 			return ((client, data, ackSender) -> {
+				
 				System.out.println("Client from " + client.getRemoteAddress() + " requested password reset");
 
 				String message = data.getMessage();
@@ -178,7 +179,7 @@ public class CRUDLogin {
 				    System.out.println("Email:    " + email);
 				} else {
 				    System.out.println("El JSON no contiene 'nameValuePairs' enresetPassword");
-					client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, new MessageOutput("Invalid request: email is missing"));
+					client.sendEvent(Events.ON_RESET_PASSWORD_FAILER.value, new MessageOutput("Invalid request: email is missing"));
 				}
 				
 			
@@ -186,26 +187,34 @@ public class CRUDLogin {
 				// Validate user with extracted email
 				
 				ManagerLogin mL = new ManagerLogin();
-				boolean userFound;
+				int result;
 				String responseMessage;
 
 				try {
-					userFound = mL.findByEmail(email);
-					if (userFound) {
+					result = mL.resetPassword(email);
+					if (result == 1) {
 						
 						//mL.setNewPassword(email);
 						responseMessage = "Si el usuario existe, se habra enviado un email con su nueva conrasena";
-					} else {
-						responseMessage = "No se ha encontrado al usuario";
+						MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
+						client.sendEvent(Events.ON_RESET_PASSWORD_SUCCESSFULL.value, messageOutput);
+					} if (result == 2){
+						responseMessage = "Se ha completado la accion de cambio de contrasena y No se envio de email";
+						MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
+						client.sendEvent(Events.ON_CHANGE_NO_MAIL.value, messageOutput);
+					}if (result == 0){
+						responseMessage = "No se ha completado la accion de cambio de contrasena y envio de email";
+						MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
+						client.sendEvent(Events.ON_LOGIN_USER_NOT_FOUND_ANSWER.value, messageOutput);
 					}
+					
 				} catch (Exception e) {
 					System.err.println("Error during password reset: " + e.getMessage());
 					responseMessage = "An error occurred while processing your request";
 				}
 
 				// Send response back to the client, i guess, showing the response was sent and delivering it to login, should do enough
-//				MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
-//				client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, messageOutput);
+			
 			});
 		}  
 	  

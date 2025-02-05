@@ -18,6 +18,7 @@ import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
 import server.socketIO.model.MessageOutput;
 
+import services.EmailService;
 public class CRUDStudent {
 
 	
@@ -135,9 +136,28 @@ public class CRUDStudent {
 				
 				ManagerStudent mS = new ManagerStudent();
 				
-//				Map<String, Object> userStatus = mL.validUser(email, password);
-			String statusCode  = mS.updateStudent(email, name,lastName,address, phone1, phone2,dni,userType,passwordHashed,passwordNotHashed  );
+			Boolean statusCode  = mS.updateStudent(email, name,lastName,address, phone1, phone2,dni,userType,passwordHashed,passwordNotHashed  );
 	        
+			EmailService emailToSend = new EmailService();
+
+			String answerMessage = "";
+			
+			if(statusCode) {
+				 answerMessage = gson.toJson("Se ha registrado al Usuario");
+
+					MessageOutput messageOutput = new MessageOutput(answerMessage);
+					client.sendEvent(Events.ON_UPDATE_ANSWER_SUCCESS.value, messageOutput);
+					emailToSend.sendMail(email.trim(), "Se ha realizado la insercion en la base de datos");
+
+			}else {
+				
+				answerMessage = gson.toJson("UNo se ha realizado la transaccion");
+
+				MessageOutput messageOutput = new MessageOutput(answerMessage);
+				client.sendEvent(Events.ON_UPDATE_ANSWER_FAILURE.value, messageOutput);
+			}
+           
+			
 	        };
 	    }
 

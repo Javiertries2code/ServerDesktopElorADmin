@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import DBEntities.Student;
+import DBEntities.Teacher;
+import services.EmailService;
 import utils.HibernateUtils;
 
 public class ManagerStudent {
@@ -60,7 +62,7 @@ public class ManagerStudent {
 		return results;
 	}
 
-	public String updateStudent(String email, String name, String lastName, String address, String phone1,
+	public Boolean updateStudent(String email, String name, String lastName, String address, String phone1,
 			String phone2, String dni, String userType, String passwordHashed, String passwordNotHashed) {
 		
 		System.out.println("REceived in  managerStudent-" + email + "--- " + lastName + "--- " + name + "--- " + address + "--- " + phone1 + "--- " + phone2 + "--- " + dni + "--- " + userType + "--- " + passwordHashed + "--- " + passwordNotHashed);
@@ -88,13 +90,54 @@ public class ManagerStudent {
 		student.setPasswordNotHashed(Integer.parseInt(passwordNotHashed));
 
 		
-		Transaction tx = session.beginTransaction();
+		try {
+			Transaction tx = session.beginTransaction();
 
-		session.save(student);
+			session.save(student);
 
-		tx.commit();
-	    System.out.println("User Updated " + student.toString());
+			tx.commit();
+		    System.out.println("User Updated " + student.toString());
 
-		return "OK, pending to controll errors";		
+			return true;
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	public Boolean sendPasswordEmail(String email) {
+		EmailService emailService = new EmailService();
+
+
+	    String query = "from Student as e where email=:email";
+	    Query<Student> queryResult = session.createQuery(query);
+	    queryResult.setParameter("email", email);
+	    queryResult.setMaxResults(1);
+	    Student student = queryResult.uniqueResult();
+	    
+	    System.out.println(student.getName()+ "IN RESETING PASSWRPD - " + email);
+	    student.setEmail(email);
+
+	    student.setPasswordHashed("88888888");
+	    student.setPasswordNotHashed(88888888);
+	    try {
+			Transaction tx = session.beginTransaction();
+
+			session.save(student);
+
+			tx.commit();
+		    System.out.println("Password updated " + student.toString());
+		    emailService.sendMail("javier.bravogu@elorrieta-errekamari.com",
+					"Se ha realizado la insercion en la base de datos con sus nuevas contrasenas 88888888");
+
+			return true;
+		} catch (Exception e) {
+		
+			System.out.println("No se actualizo la contrasena");;
+			return false;
+		}  		
+			
 	}
 }

@@ -19,7 +19,9 @@ public enum Events {
 	//////////////////////////////////////////// REMEMBER ON RESET WAS ALREADY ON
 	//////////////////////////////////////////// EVENTS
 
-	////
+	ON_CHANGE_NO_MAIL("ON_CHANGE_NO_MAIL"),
+	ON_RESET_PASSWORD("ON_RESET_PASSWORD"),
+
 	ON_RESET_PASSWORD_SUCCESSFULL("ON_RESET_PASSWORD_SUCCESSFULL"),
 	ON_RESET_PASSWORD_FAILER("ON_RESET_PASSWORD_FAILER"),
 
@@ -35,7 +37,7 @@ public enum Events {
 
 	ON_LOGIN_SUCCESS_ANSWER("onLoginCorrectAnswer"),
 
-	ON_RESET_PASSWORD("OnResetPassword"), ON_RESET_PASSWORD_ANSWER("OnResetPasswordAnswer"),
+	 ON_RESET_PASSWORD_ANSWER("OnResetPasswordAnswer"),
 
 	ON_SUCCESSFUL_REGISTRATION("onSuccessfulRegistration"),
 	ON_SUCCESSFUL_REGISTRATION_ANSWER("onSuccessfulRegistrationAnswer"),

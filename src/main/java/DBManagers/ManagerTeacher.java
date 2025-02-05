@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import DBEntities.Teacher;
+import services.EmailService;
 import utils.HibernateUtils;
 public class ManagerTeacher {
 
@@ -28,7 +29,7 @@ public class ManagerTeacher {
 	}
 	
 	
-	public String updateTeacher(String email, String name, String lastName, String address, String phone1,
+	public Boolean updateTeacher(String email, String name, String lastName, String address, String phone1,
 	        String phone2, String dni, String userType, String passwordHashed, String passwordNotHashed) {
 		
 		
@@ -56,12 +57,20 @@ public class ManagerTeacher {
 	    teacher.setPasswordHashed(passwordHashed);
 	    teacher.setPasswordNotHashed(Integer.parseInt(passwordNotHashed));
 	    
-	    Transaction tx = session.beginTransaction();
-	    session.save(teacher);
-	    tx.commit();
-	    System.out.println("User Updated " + teacher.toString());
+	    try {
+			Transaction tx = session.beginTransaction();
 
-	    return "OK, pending to controll errors";    
+			session.save(teacher);
+
+			tx.commit();
+		    System.out.println("User Updated " + teacher.toString());
+
+			return true;
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+			return false;
+		}  
 	}
 
 	
@@ -81,5 +90,39 @@ public class ManagerTeacher {
 	public Teacher getOneEmailPassword() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public Boolean sendPasswordEmail(String email) {
+		EmailService emailService = new EmailService();
+	    String query = "from Teacher as e where email=:email";
+	    Query<Teacher> queryResult = session.createQuery(query);
+	    queryResult.setParameter("email", email);
+	    queryResult.setMaxResults(1);
+	    Teacher teacher = queryResult.uniqueResult();
+	    
+	    System.out.println(teacher.getName()+ "IN RESETING PASSWRPD - " + email);
+	    teacher.setEmail(email);
+
+	    teacher.setPasswordHashed("88888888");
+	    teacher.setPasswordNotHashed(88888888);
+	    try {
+			Transaction tx = session.beginTransaction();
+
+			session.save(teacher);
+
+			tx.commit();
+		    System.out.println("Password Updated " + teacher.toString());
+		    emailService.sendMail("javier.bravogu@elorrieta-errekamari.com",
+					"Se ha realizado la insercion en la base de datos con sus nuevas contrasenas 88888888");
+		    
+		
+
+			return true;
+		} catch (Exception e) {
+		
+			System.out.println("No se actualizo la contrasena");;
+			return false;
+		}  		
 	}
 }
