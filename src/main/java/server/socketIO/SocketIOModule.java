@@ -47,6 +47,8 @@ public class SocketIOModule {
 
 		// Custom events
 		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, crudLogin.userLogin());
+		server.addEventListener(Events.ON_CLIENT_SENDING_ENCRYPTED.value, MessageInput.class, crudLogin.testingEncription());
+
 		server.addEventListener(Events.ON_GET_ALL_STUDENTS.value, MessageInput.class, crudStudent.index());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
 		server.addEventListener(Events.ON_RESET_PASSWORD.value, MessageInput.class, crudLogin.resetPassword());

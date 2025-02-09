@@ -12,6 +12,8 @@ import DBEntities.Teacher;
 import DBManagers.ManagerLogin;
 import DTO.StudentDTO;
 import DTO.TeacherDTO;
+import app.App;
+import crypt.AESEncoder;
 import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
 import server.socketIO.model.MessageOutput;
@@ -29,12 +31,27 @@ public class CRUDLogin {
 	  
 	  public DataListener<MessageInput> userLogin() {
 			return ((client, data, ackSender) -> {
+				
+				 AESEncoder codeEncode = new AESEncoder();
 				System.out.println("Client from " + client.getRemoteAddress() + " wants to log in userLogin");
 
+				
+			
 				// Extracting the JSON message
 				String message = data.getMessage();
 				//System.out.println(message   + " the mensaje ");
-
+				
+				
+				/*	System.out.println("recibo mensaje encriptadoxxxxxxxxx");
+				System.out.println(message);
+				//Here i decode the message  just got
+				message = codeEncode.decrypt(message);
+				
+				System.out.println("desencriptadoxxxxxxxxxxxxxx");
+				System.out.println(message);
+				*/
+				
+				
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
 				
@@ -78,23 +95,36 @@ public class CRUDLogin {
 				 if (user instanceof Teacher) {
 						System.out.println("user instanceof Teacher)");
 
-			            Teacher teacher = (Teacher) user; // Cast user to Teacher
-			            TeacherDTO teacherDTO = new TeacherDTO(teacher); // Convert to DTO
-			            answerMessage = gson.toJson(teacherDTO); // Convert DTO to JSON
+			            Teacher teacher = (Teacher) user; 
+			            TeacherDTO teacherDTO = new TeacherDTO(teacher); 
+			            answerMessage = gson.toJson(teacherDTO); 
 			        } else if (user instanceof Student) {
 						System.out.println("user instanceof Student)");
 
-			            Student student = (Student) user; // Cast user to Student
-			            StudentDTO studentDTO = new StudentDTO(student); // Convert to DTO
+			            Student student = (Student) user; 
+			            StudentDTO studentDTO = new StudentDTO(student); 
 			            answerMessage = gson.toJson(studentDTO); // Convert DTO to JSON
+			            
 			        } else if (user != null) {
 			            answerMessage = gson.toJson("User is not a Teacher or Student");
 			        } else {
 			            answerMessage = gson.toJson("What the fucking ever");
 
 			        }}
+              
+              
+              System.out.println("Genero mensaje sin encriptar");
+				System.out.println(message);
+            //  Here i Sould encrypt the message
 				//At least i send the not found messge, to avoid null problems, if any
+           
+				
+				//answerMessage =codeEncode.encrypt(answerMessage);
+              
 				MessageOutput messageOutput = new MessageOutput(answerMessage);
+				
+				System.out.println("Envioencriptado");
+			//	System.out.println(message);
 				
 				String status;
 				// Handle user status with a switch case
@@ -112,7 +142,21 @@ public class CRUDLogin {
 				switch (status) {
 				case "registered":
 					System.out.println("YES REGISTERED");
-					client.sendEvent(Events.ON_LOGIN_SUCCESS_ANSWER.value, messageOutput);
+					
+					try {
+						client.sendEvent(Events.ON_LOGIN_SUCCESS_ANSWER.value, messageOutput);
+						
+						 answerMessage =codeEncode.encrypt(answerMessage);
+			              
+					MessageOutput cryptedMessageOutput = new MessageOutput(answerMessage);
+					client.sendEvent(Events.ON_SERVER_SENDING_ENCRYPTED.value, cryptedMessageOutput);
+
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					
 					break;
 				case "not registered":
 					System.out.println("NOT REGISTERED");
@@ -131,50 +175,6 @@ public class CRUDLogin {
 			});
 		}
 	  
-	  /*
-	  public DataListener<MessageInput> resetPassword() {
-			return ((client, data, ackSender) -> {
-				System.out.println("Client from " + client.getRemoteAddress() + " requested password reset");
-
-				// Extracting the JSON message
-				String message = data.getMessage();
-				Gson gson = new Gson();
-				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
-
-				// Validate input JSON
-				if (!jsonObject.has("email")) {
-					System.out.println("Invalid request: email is missing");
-					client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, new MessageOutput("Invalid request: email is missing"));
-					return;
-				}
-
-				// Extract email from the JSON
-				String email = jsonObject.get("email").getAsString();
-
-				// Validate user with extracted email
-				ManagerLogin mL = new ManagerLogin();
-				boolean userFound;
-				String responseMessage;
-
-				try {
-					userFound = mL.findByEmail(email);
-					if (userFound) {
-						// TODO: Call method to send the reset password email
-						responseMessage = "An email with a new password was delivered";
-					} else {
-						responseMessage = "No such user found in the database";
-					}
-				} catch (Exception e) {
-					System.err.println("Error during password reset: " + e.getMessage());
-					responseMessage = "An error occurred while processing your request";
-				}
-
-				// Send response back to the client
-				MessageOutput messageOutput = new MessageOutput(gson.toJson(Map.of("message", responseMessage)));
-				client.sendEvent(Events.ON_RESET_PASSWORD_ANSWER.value, messageOutput);
-			});
-		}
-		*/
 	  
 	  public DataListener<MessageInput> resetPassword() {
 			return ((client, data, ackSender) -> {
@@ -233,6 +233,51 @@ public class CRUDLogin {
 				// Send response back to the client, i guess, showing the response was sent and delivering it to login, should do enough
 			
 			});
-		}  
-	  
+		}
+////////////////////////////////////////////////////////////////////
+	  public DataListener<MessageInput>  testingEncription() {
+		  /*
+		   * OOOki doki, if everything happens as i wish ut does... it will bounce back the encrypted message, that as it 
+		   * is a valid user should contain this data :-P
+		   * 
+		   */
+		  return (client, data, ackSender) -> {
+			  System.out.println(App.GREEN+ "se ha recibido ON_CLIENT_SENDING_ENCRYPTED"+App.RESET);
+			// Extracting the JSON message
+			  Object receivedData = data.getMessage();
+			  String message;
+
+			  if (receivedData instanceof Object[] && ((Object[]) receivedData).length > 0) {
+			      message = String.valueOf(((Object[]) receivedData)[0]);
+			  } else {
+			      message = String.valueOf(receivedData);
+			  }
+				// System.out.println(message + " the mensaje ");
+				 AESEncoder codeEncode = new AESEncoder();
+//Code me... code youuuu!!! coding forever...
+			//	message = codeEncode.decrypt(message);
+				 
+				 //it seems i had to cast, fuck me...
+		            message = codeEncode.decrypt(message);
+
+				
+
+				Gson gson = new Gson();
+				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
+
+				  System.out.println(App.PURPLE+ "after json"+message+App.RESET);
+
+			  
+			 
+			  
+		
+	  };
 }
+	  
+
+	  /////////////////////////////////////////////////
+	/// ENDOFCLASSS
+	 }
+
+	  
+
