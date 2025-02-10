@@ -63,7 +63,7 @@ public class AESEncoder {
 	    SecretKey key = AESKeyLoader.loadAESKey();
 	    
 	 
-		  System.out.println(App.PURPLE+ "bout to decifer"+App.RESET);
+		  System.out.println(App.PURPLE+ "about to decifer"+App.RESET);
 
 	   
 	    Cipher cipher = Cipher.getInstance("AES");
@@ -83,14 +83,14 @@ public class AESEncoder {
 	public static String decrypt(String encryptedData) throws Exception {
 		System.out.println("Enterinen decrypt");
 
-		
+	byte[] decodedData = Base64.getDecoder().decode(encryptedData);
+
 		SecretKey key = AESKeyLoader.loadAESKey();
 
 		String decryptedString = null;
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		
-		byte[] decodedData = Base64.getDecoder().decode(encryptedData);
 		byte[] decryptedData = cipher.doFinal(decodedData);
 		decryptedString = new String(decryptedData);
 		

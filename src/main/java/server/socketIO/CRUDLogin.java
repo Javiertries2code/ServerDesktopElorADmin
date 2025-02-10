@@ -14,6 +14,7 @@ import DTO.StudentDTO;
 import DTO.TeacherDTO;
 import app.App;
 import crypt.AESEncoder;
+import errorCodes.ErrorCode;
 import server.socketIO.config.Events;
 import server.socketIO.model.MessageInput;
 import server.socketIO.model.MessageOutput;
@@ -36,21 +37,8 @@ public class CRUDLogin {
 				System.out.println("Client from " + client.getRemoteAddress() + " wants to log in userLogin");
 
 				
+						String message = data.getMessage();
 			
-				// Extracting the JSON message
-				String message = data.getMessage();
-				//System.out.println(message   + " the mensaje ");
-				
-				
-				/*	System.out.println("recibo mensaje encriptadoxxxxxxxxx");
-				System.out.println(message);
-				//Here i decode the message  just got
-				message = codeEncode.decrypt(message);
-				
-				System.out.println("desencriptadoxxxxxxxxxxxxxx");
-				System.out.println(message);
-				*/
-				
 				
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(message, JsonObject.class);
@@ -64,12 +52,12 @@ public class CRUDLogin {
 				     email = nameValuePairs.has("email") ? nameValuePairs.get("email").getAsString() : null;
 				     password = nameValuePairs.has("password") ? nameValuePairs.get("password").getAsString() : null;
 
-				    System.out.println("Email: " + email + " Password: " + password);
+				   // System.out.println("Email: " + email + " Password: " + password);
 				} else {
-				    System.out.println("El JSON no contiene 'nameValuePairs'");
+					System.err.println("Error " + ErrorCode.INVALID_INPUT.getCode() + ": " + ErrorCode.INVALID_INPUT.getMessage());
+
 				}
 				
-				System.out.println("calling to managerLogin.validUSer ---CRUDLOGIN-- with" + email +"--- "+password);
 				
 
 				// Validate user with extracted credentials
@@ -82,10 +70,9 @@ public class CRUDLogin {
 				String answerMessage;
 
               if (userStatus== null) {
-            	  System.out.println("GOT NULL IN VALID USER");
 		            answerMessage = gson.toJson("User not found or invalid credentials");
               }else {
-            	  System.out.println("GOT a VALID USER");
+            	 
 
 				// Extract and convert the user object
 				Object user = userStatus.get("user");
@@ -93,13 +80,13 @@ public class CRUDLogin {
 
 				//the objects goes as a json string, this is why
 				 if (user instanceof Teacher) {
-						System.out.println("user instanceof Teacher)");
+					//	System.out.println("user instanceof Teacher)");
 
 			            Teacher teacher = (Teacher) user; 
 			            TeacherDTO teacherDTO = new TeacherDTO(teacher); 
 			            answerMessage = gson.toJson(teacherDTO); 
 			        } else if (user instanceof Student) {
-						System.out.println("user instanceof Student)");
+						//System.out.println("user instanceof Student)");
 
 			            Student student = (Student) user; 
 			            StudentDTO studentDTO = new StudentDTO(student); 
@@ -113,7 +100,7 @@ public class CRUDLogin {
 			        }}
               
               
-              System.out.println("Genero mensaje sin encriptar");
+              System.out.println(App.GREEN +"Genero mensaje sin encriptar");
 				System.out.println(message);
             //  Here i Sould encrypt the message
 				//At least i send the not found messge, to avoid null problems, if any
@@ -123,8 +110,8 @@ public class CRUDLogin {
               
 				MessageOutput messageOutput = new MessageOutput(answerMessage);
 				
-				System.out.println("Envioencriptado");
-			//	System.out.println(message);
+				System.out.println(App.GREEN +"Envioencriptado");
+				System.out.println(message + App.RESET);
 				
 				String status;
 				// Handle user status with a switch case
@@ -144,10 +131,12 @@ public class CRUDLogin {
 					System.out.println("YES REGISTERED");
 					
 					try {
+						
+						//Sending both thecorrect message, and encripted, for the sake of meeting requirements
 						client.sendEvent(Events.ON_LOGIN_SUCCESS_ANSWER.value, messageOutput);
 						
 						 answerMessage =codeEncode.encrypt(answerMessage);
-			              
+			         //the message is gonna bounce back as an object, there if fucks     
 					MessageOutput cryptedMessageOutput = new MessageOutput(answerMessage);
 					client.sendEvent(Events.ON_SERVER_SENDING_ENCRYPTED.value, cryptedMessageOutput);
 
@@ -195,7 +184,7 @@ public class CRUDLogin {
 
 				    System.out.println("Email:    " + email);
 				} else {
-				    System.out.println("El JSON no contiene 'nameValuePairs' enresetPassword");
+					System.err.println("Error " + ErrorCode.INVALID_INPUT.getCode() + ": " + ErrorCode.INVALID_INPUT.getMessage());
 					client.sendEvent(Events.ON_RESET_PASSWORD_FAILER.value, new MessageOutput("Invalid request: email is missing"));
 				}
 				
@@ -247,11 +236,9 @@ public class CRUDLogin {
 			  Object receivedData = data.getMessage();
 			  String message;
 
-			  if (receivedData instanceof Object[] && ((Object[]) receivedData).length > 0) {
-			      message = String.valueOf(((Object[]) receivedData)[0]);
-			  } else {
+			  
 			      message = String.valueOf(receivedData);
-			  }
+			  
 				// System.out.println(message + " the mensaje ");
 				 AESEncoder codeEncode = new AESEncoder();
 //Code me... code youuuu!!! coding forever...

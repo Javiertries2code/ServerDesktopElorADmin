@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 
 import DBEntities.Student;
 import DBEntities.Teacher;
+import errorCodes.ErrorCode;
 import jakarta.mail.MessagingException;
 import server.socketIO.config.Events;
 import server.socketIO.model.MessageOutput;
@@ -28,17 +29,23 @@ public class ManagerLogin {
 	}
 
 	public Map<String, Object> validUser(String email, String password) {
-		System.out.println("In managerLogin.validUSer ---CRUDLOGIN--" + email + "--- " + password);
 
 		email = email.trim().toLowerCase();
 		password = password.trim();
 
-		System.out.println("SEARCHING FOR TEACHERS");
+		//System.out.println("SEARCHING FOR TEACHERS");
 		String query = "from Teacher where email = :email and passwordNotHashed = :passwordNotHashed";
 		Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
 		queryResult.setParameter("email", email);
 		queryResult.setParameter("passwordNotHashed", password);
-		Teacher result = queryResult.uniqueResult();
+		
+		Teacher result = null;
+		try {
+			result = queryResult.uniqueResult();
+		} catch (Exception e) {
+			System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+			e.printStackTrace();
+		}
 
 		if (result != null) {
 			System.out.println("Found Teacher with email: " + result.getEmail() + "--nname  = " + result.getName());
@@ -52,63 +59,39 @@ public class ManagerLogin {
 				return Map.of("status", "not registered", "type", "Teacher", "user", result);
 			}
 		}
-		System.out.println("SEARCHING FOR STUDENTS");
+		//System.out.println("SEARCHING FOR STUDENTS");
 
 		query = "from Student where email = :email and passwordNotHashed = :passwordNotHashed";
 		Query<Student> studentQueryResult = session.createQuery(query, Student.class);
 		studentQueryResult.setParameter("email", email);
 		studentQueryResult.setParameter("passwordNotHashed", password);
 
-		Student studentResult = studentQueryResult.uniqueResult();
+		Student studentResult = null;
+		try {
+			studentResult = studentQueryResult.uniqueResult();
+		} catch (Exception e) {
+			System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+			e.printStackTrace();
+		}
+		
 		if (studentResult != null) {
 			System.out.println(
 					"Found Student with email: " + studentResult.getEmail() + "--nname  = " + studentResult.getName());
 			if ((studentResult.getRegistered())) {
 				return Map.of("status", "registered", "type", "Student", "user", studentResult);
 			} else {
-				System.out.println("SEARCHING FOR STUDENTS");
+				//System.out.println("SEARCHING FOR STUDENTS");
 
 				sendPasswordEmail(studentResult.getEmail());
 				return Map.of("status", "not registered", "type", "Student", "user", studentResult);
 			}
 		}
 
-		System.out.println("User not found in DB for email: " + email);
+		System.err.println("Error " + ErrorCode.USER_NOT_FOUND.getCode() + ": " + ErrorCode.USER_NOT_FOUND.getMessage());
 		return null;
 	}
 
-	/*
-	 * public String findReturnByEmail(String email) throws MessagingException {
-	 * EmailService eS = new EmailService(); String defaultPassword = "8888888";
-	 * String defaultEncryptedPassword = "88888888";
-	 * 
-	 * String query = "from Teacher where email = :email"; Query<Teacher>
-	 * queryResult = session.createQuery(query, Teacher.class);
-	 * queryResult.setParameter("email", email); Teacher result =
-	 * queryResult.uniqueResult();
-	 * 
-	 * if (result != null) { System.out.println("Found Teacher with email: " +
-	 * result.getEmail()); //RESETPASSWORD HERE: String resetComunication =
-	 * updatePasswordTeacher(email,defaultPassword,defaultEncryptedPassword );
-	 * eS.sendMail(email, defaultPassword);
-	 * 
-	 * return resetComunication; } else { query =
-	 * "from Student where email = :email"; Query<Student> studentQueryResult =
-	 * session.createQuery(query, Student.class);
-	 * studentQueryResult.setParameter("email", email);
-	 * 
-	 * Student studentResult = studentQueryResult.uniqueResult();
-	 * 
-	 * if (studentResult != null) { System.out.println("Found Student with email: "
-	 * + studentResult.getEmail()); String resetComunication =
-	 * updatePasswordStudent(email,defaultPassword,defaultEncryptedPassword );
-	 * eS.sendMail(email, defaultPassword);
-	 * 
-	 * return resetComunication; } }
-	 * 
-	 * return null; }
-	 * 
-	 */
+	
 	public int resetPassword(String email) {
 
 		EmailService emailService = new EmailService();
@@ -116,7 +99,13 @@ public class ManagerLogin {
 		Query<Teacher> queryResult = session.createQuery(query, Teacher.class);
 		queryResult.setParameter("email", email);
 
-		Teacher result = queryResult.uniqueResult();
+		Teacher result= null;
+		try {
+			result = queryResult.uniqueResult();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		if (result != null) {
 			System.out.println("Found Teacher with email: " + result.getEmail());
@@ -129,7 +118,8 @@ System.out.println("password changed, email sent");
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					System.out.println("password changed, email not sent");
+					System.err.println("Error " + ErrorCode.EMAIL_SEND_FAILED.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+
 					return 2;
 
 				}
@@ -139,7 +129,14 @@ System.out.println("password changed, email sent");
 			Query<Student> studentQueryResult = session.createQuery(query, Student.class);
 			studentQueryResult.setParameter("email", email);
 
-			Student studentResult = studentQueryResult.uniqueResult();
+			Student studentResult= null;
+			try {
+				studentResult = studentQueryResult.uniqueResult();
+			} catch (Exception e) {
+				System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+				e.printStackTrace();
+			}
+			
 			if (studentResult != null) {
 				System.out.println("Found Student with email: " + studentResult.getEmail());
 				if (new ManagerStudent().sendPasswordEmail(email)) {
@@ -151,7 +148,9 @@ System.out.println("password changed, email sent");
 						return 1;
 					} catch (MessagingException e) {
 						// TODO Auto-generated catch block
-						System.out.println("password changed, email not sent");
+						System.out.println("Error " + ErrorCode.EMAIL_SEND_FAILED.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+						System.err.println("Error " + ErrorCode.EMAIL_SEND_FAILED.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+
 						return 2;
 					}
 				}
@@ -165,7 +164,7 @@ System.out.println("password changed, email sent");
 	private void sendPasswordEmail(String email) {
 		// Logic to send a password setup email
 
-		System.out.println("Sending password setup email to: " + email);
+		System.out.println("Sending reset password setup email to: " + email);
 		return;
 	}
 
