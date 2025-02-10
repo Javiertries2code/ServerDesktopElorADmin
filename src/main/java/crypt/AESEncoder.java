@@ -56,8 +56,8 @@ public class AESEncoder {
 			  System.out.println(App.PURPLE+ " got a decodedData"+App.RESET);
 
 		} catch (Exception e) {
-			  System.out.println(App.PURPLE+ "Didnt get decodedData"+App.RESET);
-			e.printStackTrace();
+			  System.out.println(App.PURPLE+ "Didnt get decodedData Or is empty "+App.RESET);
+			//e.printStackTrace();
 		}
 	    
 	    SecretKey key = AESKeyLoader.loadAESKey();

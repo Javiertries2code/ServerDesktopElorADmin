@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import DBEntities.Teacher;
+import app.App;
 import services.EmailService;
 import utils.HibernateUtils;
 public class ManagerTeacher {
@@ -56,6 +57,7 @@ public class ManagerTeacher {
 	 
 	    teacher.setPasswordHashed(passwordHashed);
 	    teacher.setPasswordNotHashed(Integer.parseInt(passwordNotHashed));
+	    System.out.println(App.PURPLE +"Techer with new datam checkpassword" +teacher.toString()+ App.RESET);
 	    
 	    try {
 			Transaction tx = session.beginTransaction();

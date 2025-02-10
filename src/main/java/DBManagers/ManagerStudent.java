@@ -10,6 +10,7 @@ import org.hibernate.query.Query;
 
 import DBEntities.Student;
 import DBEntities.Teacher;
+import errorCodes.ErrorCode;
 import services.EmailService;
 import utils.HibernateUtils;
 
@@ -36,15 +37,24 @@ public class ManagerStudent {
 		Query<Student> queryResult = session.createQuery(query);
 		queryResult.setParameter("email", email);
 		queryResult.setMaxResults(1);
-		Student student = queryResult.uniqueResult();
+		
+		
+		
+		Student student = null;
+		try {
+			student = queryResult.uniqueResult();
+			Transaction tx = session.beginTransaction();
+
+			session.save(student);
+
+			tx.commit();
+		} catch (Exception e) {
+			System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
+			e.printStackTrace();
+		}
 
 
-		Transaction tx = session.beginTransaction();
-
-		session.save(student);
-
-		tx.commit();
-		System.out.println("Insertada nueva contrasena!");
+	
 
 		return "OK, pending to controll errors";
 	}
@@ -101,7 +111,7 @@ public class ManagerStudent {
 			return true;
 		} catch (Exception e) {
 		
-			e.printStackTrace();
+			System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
 			return false;
 		}
 		
@@ -134,7 +144,7 @@ public class ManagerStudent {
 
 			return true;
 		} catch (Exception e) {
-		
+			System.err.println("Error " + ErrorCode.DATABASE_ERROR.getCode() + ": " + ErrorCode.EMAIL_SEND_FAILED.getMessage());
 			System.out.println("No se actualizo la contrasena");;
 			return false;
 		}  		

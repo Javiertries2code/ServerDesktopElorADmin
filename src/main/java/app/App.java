@@ -11,7 +11,7 @@ public class App {
  //  private static final String HOST_NAME =  "10.0.22.43" ;
 
 	private static final String HOST_NAME = "192.168.1.40";
-	private static final int PORT = 5025;
+	private static final int PORT = 5041;
 	
 	public static final String PURPLE = "\u001B[35m";
 	public static final String GREEN = "\u001B[32m";
