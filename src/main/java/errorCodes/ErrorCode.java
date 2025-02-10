@@ -35,8 +35,10 @@ public enum ErrorCode {
     EMAIL_INVALID_ADDRESS(401, "Dirección de correo inválida"),
     EMAIL_SERVER_UNAVAILABLE(402, "Servidor de correo no disponible"),
     EMAIL_AUTHENTICATION_FAILED(403, "Fallo en la autenticación del servidor de correo"),
-    EMAIL_TIMEOUT(404, "Tiempo de espera agotado al enviar correo");
+    EMAIL_TIMEOUT(404, "Tiempo de espera agotado al enviar correo"),
 
+
+    ENCRYPTION_ERROR(404, "sE HA PRODUCIDO UN ERROR EN LA ENCRIPTACION");
 
 
     private final int code;

@@ -47,7 +47,6 @@ public class SocketIOModule {
 
 		// Custom events
 		server.addEventListener(Events.ON_LOGIN.value, MessageInput.class, crudLogin.userLogin());
-		server.addEventListener(Events.ON_CLIENT_SENDING_ENCRYPTED.value, MessageInput.class, crudLogin.testingEncription());
 
 		server.addEventListener(Events.ON_GET_ALL_STUDENTS.value, MessageInput.class, crudStudent.index());
 		server.addEventListener(Events.ON_LOGOUT.value, MessageInput.class, this.logout());
@@ -56,8 +55,11 @@ public class SocketIOModule {
 		
 		server.addEventListener(Events.ON_REGISTER_TEACHER.value, MessageInput.class, crudTeacher.update());
 		server.addEventListener(Events.ON_REGISTER_STUDENT.value, MessageInput.class, crudStudent.update());
+		
+		
+		server.addEventListener(Events.ON_CLIENT_SENDING_ENCRYPTED_DES.value, MessageInput.class, crudLogin.testingEncriptionDES());
+		server.addEventListener(Events.ON_CLIENT_SENDING_ENCRYPTED.value, MessageInput.class, crudLogin.testingEncription());
 
-		//server.addEventListener(Events.ON_STOP_SERVER.value, MessageInput.class, this.stop());
 
 
 	}
